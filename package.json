@@ -23,7 +23,8 @@
         "clean",
         "elegant",
         "calm",
-        "neutralflow"
+        "neutralflow",
+        "neutral"
     ],
     "contributes": {
         "themes": [
