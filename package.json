@@ -1,15 +1,15 @@
 {
-    "name": "kanagawa",
-    "displayName": "Kanagawa",
-    "description": "Port of the Kanagawa.nvim - dark theme inspired by the colors of the famous painting by Katsushika Hokusai.",
+    "name": "neutralflow",
+    "displayName": "NeutralFlow",
+    "description": "A clean, calm dark theme with neutral tones designed for focused and comfortable coding.",
     "version": "1.5.1",
-    "publisher": "qufiwefefwoyn",
+    "publisher": "JenuelDev",
     "icon": "assets/icon.png",
     "repository": {
         "type": "git",
-        "url": "https://github.com/barklan/kanagawa.vscode"
+        "url": "https://github.com/JenuelDev/NeutralFlow"
     },
-    "homepage": "https://github.com/barklan/kanagawa.vscode",
+    "homepage": "https://github.com/JenuelDev/NeutralFlow",
     "engines": {
         "vscode": "^1.63.0"
     },
@@ -18,36 +18,19 @@
     ],
     "keywords": [
         "theme",
-        "contrast",
         "dark",
-        "kanagawa",
+        "neutral",
         "clean",
         "elegant",
-        "calm"
-    ],
-    "badges": [
-        {
-            "url": "https://vsmarketplacebadge.apphb.com/version/qufiwefefwoyn.kanagawa.svg",
-            "href": "https://marketplace.visualstudio.com/items/qufiwefefwoyn.kanagawa",
-            "description": "Extension version"
-        },
-        {
-            "url": "https://vsmarketplacebadge.apphb.com/installs/qufiwefefwoyn.kanagawa.svg",
-            "href": "https://marketplace.visualstudio.com/items/qufiwefefwoyn.kanagawa",
-            "description": "Extension installs"
-        },
-        {
-            "url": "https://vsmarketplacebadge.apphb.com/rating/qufiwefefwoyn.kanagawa.svg",
-            "href": "https://marketplace.visualstudio.com/items/qufiwefefwoyn.kanagawa",
-            "description": "Extension Rating"
-        }
+        "calm",
+        "neutralflow"
     ],
     "contributes": {
         "themes": [
             {
-                "label": "Kanagawa",
+                "label": "NeutralFlow",
                 "uiTheme": "vs-dark",
-                "path": "./themes/kanagawa-color-theme.json"
+                "path": "./themes/neutralflow-color-theme.json"
             }
         ]
     }

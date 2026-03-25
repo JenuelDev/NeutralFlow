@@ -1,15 +1,7 @@
 <p align="center">
-  <h2 align="center">🌊 KANAGAWA.vscode 🌊</h2>
+  <h2 align="center">NeutralFlow</h2>
   <p align="center">
-      <a href="https://marketplace.visualstudio.com/items?itemName=qufiwefefwoyn.kanagawa">
-        <img src="https://vsmarketplacebadge.apphb.com/version/qufiwefefwoyn.kanagawa.svg" />
-      </a>
-      <a href="https://marketplace.visualstudio.com/items?itemName=qufiwefefwoyn.kanagawa">
-        <img src="https://img.shields.io/visual-studio-marketplace/i/qufiwefefwoyn.kanagawa" />
-      </a>
-      <a href="https://marketplace.visualstudio.com/items?itemName=qufiwefefwoyn.kanagawa">
-        <img src="https://vsmarketplacebadge.apphb.com/rating-star/qufiwefefwoyn.kanagawa.svg" />
-      </a>
+    A clean, calm dark theme with neutral tones designed for focused and comfortable coding.
   </p>
 </p>
 
@@ -20,12 +12,7 @@
 <br>
 
 <p align="center">
-VS Code port of amazing <a href="https://github.com/rebelot/kanagawa.nvim">KANAGAWA.nvim</a> colorscheme by rebelot.
-Credit for initial port goes to <a href="https://github.com/conner-calhoun">conner-calhoun</a>.
-</p>
-
-<p align="center">
-  <h2 align="center"><img src="assets/screenshot.png"></h2>
+  <img src="assets/screenshot.png">
 </p>
 
 ## Semantic tokens
@@ -69,7 +56,7 @@ If you prefer comments to stand out in your code - this looks nice:
 ```json
 {
   "editor.tokenColorCustomizations": {
-    "[Kanagawa]": {
+    "[NeutralFlow]": {
       "comments": {
         "foreground": "#FF9E3B"
       }
@@ -79,8 +66,3 @@ If you prefer comments to stand out in your code - this looks nice:
 ```
 
 Paste it in your `settings.json`.
-
-## Misc
-
-You can find this theme's colors for different terminal emulators [here](https://github.com/rebelot/kanagawa.nvim#extras).
-If you like this theme, consider supporting [original author](https://github.com/rebelot/kanagawa.nvim#donate).
