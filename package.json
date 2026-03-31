@@ -32,6 +32,31 @@
                 "label": "NeutralFlow",
                 "uiTheme": "vs-dark",
                 "path": "./themes/neutralflow-color-theme.json"
+            },
+            {
+                "label": "NeutralFlow Emerald",
+                "uiTheme": "vs-dark",
+                "path": "./themes/neutralflow-emerald-color-theme.json"
+            },
+            {
+                "label": "NeutralFlow Sapphire",
+                "uiTheme": "vs-dark",
+                "path": "./themes/neutralflow-sapphire-color-theme.json"
+            },
+            {
+                "label": "NeutralFlow Amber",
+                "uiTheme": "vs-dark",
+                "path": "./themes/neutralflow-amber-color-theme.json"
+            },
+            {
+                "label": "NeutralFlow Rose",
+                "uiTheme": "vs-dark",
+                "path": "./themes/neutralflow-rose-color-theme.json"
+            },
+            {
+                "label": "NeutralFlow Violet",
+                "uiTheme": "vs-dark",
+                "path": "./themes/neutralflow-violet-color-theme.json"
             }
         ]
     }

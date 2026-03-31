@@ -1,5 +1,14 @@
 {
     "cSpell.words": [
         "neutralflow"
-    ]
+    ],
+    "chat.tools.terminal.autoApprove": {
+        "/^pwsh -File \\.github/hooks/validate-theme\\.ps1$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    },
+    "powershell.cwd": null,
+    "powershell.startAsLoginShell": false,
+    "terminal.integrated.defaultProfile.windows": "PowerShell"
 }
