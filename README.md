@@ -17,7 +17,7 @@
 
 ## Available Themes
 
-NeutralFlow comes with **6 beautiful color variations**, each with a unique accent palette while maintaining the same calm, neutral base:
+NeutralFlow comes with **7 beautiful color variations**, each with a unique accent palette while maintaining the same calm, neutral base:
 
 | Theme | Accent Color | Description |
 |-------|--------------|-------------|
@@ -27,6 +27,7 @@ NeutralFlow comes with **6 beautiful color variations**, each with a unique acce
 | **NeutralFlow Amber** | Orange (#D48C3E) | Warm sunset amber tones - energetic and warm |
 | **NeutralFlow Rose** | Pink (#C85A6C) | Soft rose pink tones - gentle and creative |
 | **NeutralFlow Violet** | Violet (#8B6FA3) | Deep violet purple tones - creative and sophisticated |
+| **NeutralFlow One Dark Pro** | Multi-color | Inspired by One Dark Pro - vibrant and popular |
 
 ### How to Switch Themes
 

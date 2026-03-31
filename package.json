@@ -57,6 +57,11 @@
                 "label": "NeutralFlow Violet",
                 "uiTheme": "vs-dark",
                 "path": "./themes/neutralflow-violet-color-theme.json"
+            },
+            {
+                "label": "NeutralFlow One Dark Pro",
+                "uiTheme": "vs-dark",
+                "path": "./themes/neutralflow-one-dark-pro-color-theme.json"
             }
         ]
     }
