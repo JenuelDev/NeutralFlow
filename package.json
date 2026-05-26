@@ -1,8 +1,8 @@
 {
     "name": "neutralflow",
-    "displayName": "NeutralFlow",
+    "displayName": "Neutral Flow",
     "description": "A clean, calm dark theme with neutral tones designed for focused and comfortable coding.",
-    "version": "1.5.4",
+    "version": "1.5.5",
     "publisher": "JenuelDevOfficial",
     "icon": "assets/icon.png",
     "repository": {
