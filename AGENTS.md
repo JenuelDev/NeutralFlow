@@ -29,6 +29,7 @@ code --install-extension neutralflow-1.5.2.vsix
 1. Edit `themes/neutralflow-color-theme.json` to modify colors
 2. Press `F5` in VS Code to launch Extension Development Host
 3. Test theme in the new window via `Ctrl+K Ctrl+T` (Select Color Theme)
+4. Run `npm run build:zed` to regenerate the Zed themes (see [Zed Port](#zed-port))
 
 ## Project Structure
 
@@ -41,8 +42,14 @@ NeutralFlow/
 │   ├── icon.png                            # Extension icon
 │   ├── main.png                            # Preview image
 │   └── screenshot.png                      # Screenshot
+├── scripts/
+│   └── build-zed-theme.js                  # Generates zed/ from themes/
 ├── themes/
-│   └── neutralflow-color-theme.json        # Main theme definition
+│   └── neutralflow-*-color-theme.json      # VS Code theme definitions (source of truth)
+├── zed/                                    # Generated Zed extension - don't edit by hand
+│   ├── extension.toml
+│   ├── LICENSE                             # Copy of ../LICENSE (Zed requires one here)
+│   └── themes/neutralflow.json             # All variants as one Zed theme family
 ├── AGENTS.md                               # This file
 ├── package.json                            # Extension manifest
 └── README.md                               # User documentation
@@ -115,6 +122,26 @@ See `README.md` for detailed customization examples.
 - [ ] Bracket matching works
 - [ ] Terminal colors readable
 - [ ] Hover widgets legible
+
+## Zed Port
+
+`scripts/build-zed-theme.js` converts every theme listed in `package.json` → `contributes.themes` into one Zed theme family at `zed/themes/neutralflow.json`, and writes `zed/extension.toml` (version taken from `package.json`).
+
+- **UI colors** map VS Code keys to Zed keys in `buildStyle()`. Colors Zed needs but VS Code lacks (muted text, status backgrounds, dim terminal colors) are derived from the palette.
+- **Syntax colors** come from `SYNTAX_MAP`: each Zed capture lists TextMate scope stacks that are resolved against `tokenColors` the way VS Code resolves them, optionally overridden by a `semanticTokenColors` selector.
+- Zed themes can't target a single language or scope, so per-language rules (JSON key nesting levels, CSS property names) collapse to one color per capture.
+- The published schema (`https://zed.dev/schema/themes/v0.2.0.json`) lags behind Zed: editors flag keys like `version_control.*`, `minimap.thumb.*` and `search.active_match_background` as unknown, but Zed reads them (see `crates/settings_content/src/theme.rs` in the Zed repo). Don't remove them.
+- Test locally: in Zed run `zed: install dev extension` and select the `zed/` folder.
+- Publish ([guide](https://zed.dev/docs/extensions/publishing/publishing-guide)): commit and push `zed/` first, since Zed builds from the submodule commit. In a fork of `zed-industries/extensions`, run `git submodule add https://github.com/JenuelDev/NeutralFlow.git extensions/neutralflow-theme` (HTTPS, not SSH), add the entry below to `extensions.toml`, run `pnpm sort-extensions`, and open a PR that touches only this extension. The `version` must match `zed/extension.toml` at the submodule commit.
+
+  ```toml
+  [neutralflow-theme]
+  submodule = "extensions/neutralflow-theme"
+  path = "zed"
+  version = "1.5.5"
+  ```
+
+- Registry rules met by the generator: the ID ends in `-theme` and doesn't contain "zed" or "extension"; the extension contains only themes; an accepted license (MIT) sits inside `zed/`, because a license at the repo root doesn't count.
 
 ## Common Pitfalls
 

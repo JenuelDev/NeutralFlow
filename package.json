@@ -13,6 +13,9 @@
     "engines": {
         "vscode": "^1.63.0"
     },
+    "scripts": {
+        "build:zed": "node scripts/build-zed-theme.js"
+    },
     "categories": [
         "Themes"
     ],

@@ -2,6 +2,8 @@
 .github/**
 .vscode/**
 assets/**
+scripts/**
+zed/**
 .gitignore
 *.vsix
 .env

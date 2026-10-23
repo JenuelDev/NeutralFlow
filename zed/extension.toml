@@ -1,0 +1,7 @@
+id = "neutralflow-theme"
+name = "NeutralFlow"
+version = "1.5.5"
+schema_version = 1
+authors = ["JenuelDev"]
+description = "A clean, calm dark theme with neutral tones designed for focused and comfortable coding."
+repository = "https://github.com/JenuelDev/NeutralFlow"

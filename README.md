@@ -3,6 +3,9 @@
   <p align="center">
     A clean, calm dark theme with neutral tones designed for focused and comfortable coding.
   </p>
+  <p align="center">
+    Available for <b>Visual Studio Code</b> and <b>Zed</b>.
+  </p>
 </p>
 
 <p align="center">
@@ -15,9 +18,16 @@
   <img src="assets/screenshot.png">
 </p>
 
+## Supported Editors
+
+| Editor | How to install |
+|--------|----------------|
+| **Visual Studio Code** | Install [NeutralFlow from the Marketplace](https://marketplace.visualstudio.com/items?itemName=JenuelDevOfficial.neutralflow) |
+| **Zed** | Install as a dev extension from this repository (see [Using NeutralFlow in Zed](#using-neutralflow-in-zed)) |
+
 ## Available Themes
 
-NeutralFlow comes with **7 beautiful color variations**, each with a unique accent palette while maintaining the same calm, neutral base:
+NeutralFlow comes with **7 beautiful color variations**, available in both VS Code and Zed. Each has a unique accent palette while maintaining the same calm, neutral base:
 
 | Theme | Accent Color | Description |
 |-------|--------------|-------------|
@@ -31,11 +41,27 @@ NeutralFlow comes with **7 beautiful color variations**, each with a unique acce
 
 ### How to Switch Themes
 
+The shortcut is the same in VS Code and Zed:
+
 1. Press `Ctrl+K Ctrl+T` (or `Cmd+K Cmd+T` on macOS)
 2. Select your preferred NeutralFlow variant from the theme picker
 3. Enjoy your new color scheme!
 
-## Semantic tokens
+## Using NeutralFlow in Zed
+
+All 7 variants are also available for [Zed](https://zed.dev). To install them from this repository:
+
+1. Clone the repository.
+2. In Zed, open the command palette, run `zed: install dev extension`, and select the `zed/` folder.
+3. Press `Ctrl+K Ctrl+T` (or `Cmd+K Cmd+T` on macOS) and pick a NeutralFlow variant.
+
+The Zed themes are generated from the VS Code themes in `themes/`. After changing a VS Code theme, regenerate them with:
+
+```sh
+npm run build:zed
+```
+
+## Semantic tokens (VS Code)
 
 Theme supports and recommends enabling semantic tokens.
 
@@ -67,7 +93,7 @@ Enabled by default.
 }
 ```
 
-## Customization
+## Customization (VS Code)
 
 ### Comments
 
