@@ -132,7 +132,12 @@ See `README.md` for detailed customization examples.
 - Zed themes can't target a single language or scope, so per-language rules (JSON key nesting levels, CSS property names) collapse to one color per capture.
 - The published schema (`https://zed.dev/schema/themes/v0.2.0.json`) lags behind Zed: editors flag keys like `version_control.*`, `minimap.thumb.*` and `search.active_match_background` as unknown, but Zed reads them (see `crates/settings_content/src/theme.rs` in the Zed repo). Don't remove them.
 - Test locally: in Zed run `zed: install dev extension` and select the `zed/` folder.
-- Publish ([guide](https://zed.dev/docs/extensions/publishing/publishing-guide)): commit and push `zed/` first, since Zed builds from the submodule commit. In a fork of `zed-industries/extensions`, run `git submodule add https://github.com/JenuelDev/NeutralFlow.git extensions/neutralflow-theme` (HTTPS, not SSH), add the entry below to `extensions.toml`, run `pnpm sort-extensions`, and open a PR that touches only this extension. The `version` must match `zed/extension.toml` at the submodule commit.
+- Publish ([guide](https://zed.dev/docs/extensions/publishing/publishing-guide)): the registry doesn't take copied files. It pins this repo as a submodule and builds `zed/` at that commit, so commit and push first. With `ZED_EXTENSIONS_REPO_PATH` in `.env` set to a local clone of a `zed-industries/extensions` fork, `npm run build:zed` then syncs that clone:
+  - It adds the `extensions/neutralflow-theme` submodule with the HTTPS URL, or moves it to the latest pushed commit.
+  - It writes the entry below into `extensions.toml` and `.gitmodules` in sorted order, the same as `pnpm sort-extensions`, and stages the changes.
+  - It warns if the pushed `zed/` differs from the local build.
+
+  Then commit on a branch in the clone and open a PR that touches only this extension. The `version` comes from `package.json` and must match `zed/extension.toml` at the submodule commit.
 
   ```toml
   [neutralflow-theme]

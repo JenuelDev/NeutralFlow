@@ -61,6 +61,21 @@ The Zed themes are generated from the VS Code themes in `themes/`. After changin
 npm run build:zed
 ```
 
+### Publishing to the Zed extension registry
+
+Zed publishes extensions from [zed-industries/extensions](https://github.com/zed-industries/extensions), which includes this repository as a git submodule and builds its `zed/` folder. `npm run build:zed` can prepare that repository for you:
+
+1. Fork `zed-industries/extensions` and clone your fork.
+2. Copy `.env.example` to `.env` and set `ZED_EXTENSIONS_REPO_PATH` to your clone:
+
+   ```sh
+   ZED_EXTENSIONS_REPO_PATH=D:\path\to\extensions
+   ```
+
+3. Regenerate the themes, then commit and push this repository. The registry builds from the pushed commit, not your local files.
+4. Run `npm run build:zed` again. It points the `extensions/neutralflow-theme` submodule at the latest pushed commit and writes the `neutralflow-theme` entry in `extensions.toml` with the current version. Both changes are staged. If the pushed commit doesn't match your local `zed/` folder, it warns you.
+5. In your clone, commit on a new branch, push it, and open a pull request to `zed-industries/extensions`. See Zed's [publishing guide](https://zed.dev/docs/extensions/publishing/publishing-guide).
+
 ## Semantic tokens (VS Code)
 
 Theme supports and recommends enabling semantic tokens.

@@ -7,9 +7,14 @@
  * The VS Code themes are the source of truth: edit those, then re-run this
  * script. Every theme listed in package.json "contributes.themes" becomes one
  * entry in zed/themes/neutralflow.json. Don't edit the files in zed/ by hand.
+ *
+ * If ZED_EXTENSIONS_REPO_PATH is set (in .env or the environment) to a local
+ * clone of a zed-industries/extensions fork, the clone is synced afterwards.
+ * See syncExtensionsRepo().
  */
 'use strict';
 
+const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -466,11 +471,78 @@ function buildStyle(theme) {
 
 const sortKeys = (object) => Object.fromEntries(Object.entries(object).sort(([a], [b]) => a.localeCompare(b)));
 
+// --- Zed extensions repo -------------------------------------------------------
+
+const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] }).trim();
+
+const readText = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n') : null);
+
+// Inserts or replaces the `[...]` section named `name` in a file of
+// blank-line-separated sections kept sorted by name, the layout that
+// `pnpm sort-extensions` writes for extensions.toml and .gitmodules.
+function upsertSection(file, name, section) {
+    const text = fs.readFileSync(file, 'utf8');
+    const eol = text.includes('\r\n') ? '\r\n' : '\n';
+    const nameOf = (s) => /^\[(?:submodule )?"?([^"\]]+)"?\]/.exec(s)[1];
+    const sections = readText(file)
+        .split(/\n+(?=\[)/)
+        .map((s) => s.trim())
+        .filter((s) => s && nameOf(s) !== name);
+    const index = sections.findIndex((s) => nameOf(s) > name);
+    sections.splice(index < 0 ? sections.length : index, 0, section);
+    fs.writeFileSync(file, sections.join('\n\n').replace(/\n/g, eol) + eol);
+}
+
+// Zed's registry doesn't take copies of the extension files: it pins this repo
+// as a git submodule and builds the `zed/` folder at that commit. So instead of
+// copying zed/, point the submodule at the latest pushed commit and set the
+// registry version, as the publishing guide describes:
+// https://zed.dev/docs/extensions/publishing/publishing-guide
+function syncExtensionsRepo(pkg) {
+    const repo = process.env.ZED_EXTENSIONS_REPO_PATH;
+    if (!repo) return;
+    if (!fs.existsSync(path.join(repo, 'extensions.toml'))) {
+        throw new Error(`ZED_EXTENSIONS_REPO_PATH: ${repo} is not a clone of zed-industries/extensions (no extensions.toml)`);
+    }
+
+    const submodule = `extensions/${EXTENSION_ID}`;
+    const url = pkg.repository.url.replace(/\.git$/, '') + '.git';
+    if (readText(path.join(repo, '.gitmodules')).includes(`[submodule "${submodule}"]`)) {
+        git(repo, 'submodule', 'update', '--init', '--remote', submodule);
+    } else {
+        git(repo, 'submodule', 'add', url, submodule);
+    }
+    upsertSection(path.join(repo, '.gitmodules'), submodule, `[submodule "${submodule}"]\n\tpath = ${submodule}\n\turl = ${url}`);
+    upsertSection(
+        path.join(repo, 'extensions.toml'),
+        EXTENSION_ID,
+        `[${EXTENSION_ID}]\nsubmodule = "${submodule}"\npath = "zed"\nversion = "${pkg.version}"`,
+    );
+    git(repo, 'add', '.gitmodules', 'extensions.toml', submodule);
+
+    const commit = git(path.join(repo, submodule), 'rev-parse', '--short', 'HEAD');
+    console.log(`Synced ${repo}: ${submodule} at ${commit}, version ${pkg.version}`);
+
+    // The registry builds what's pushed, so a build that isn't committed and
+    // pushed yet won't be what gets published.
+    const files = ['extension.toml', 'LICENSE', 'themes/neutralflow.json'];
+    const stale = files.filter((file) => readText(path.join(repo, submodule, 'zed', file)) !== readText(path.join(ZED_DIR, file)));
+    if (stale.length) {
+        console.warn(`Warning: the pushed commit differs from zed/ (${stale.join(', ')}). Commit and push this repo, then run this again before opening the PR.`);
+    }
+}
+
 // --- Output ------------------------------------------------------------------
 
 const APPEARANCE = { 'vs': 'light', 'hc-light': 'light', 'vs-dark': 'dark', 'hc-black': 'dark' };
 
 function main() {
+    try {
+        process.loadEnvFile(path.join(ROOT, '.env'));
+    } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+    }
+
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
     const themes = pkg.contributes.themes.map((entry) => {
         const theme = JSON.parse(fs.readFileSync(path.join(ROOT, entry.path), 'utf8'));
@@ -503,6 +575,8 @@ function main() {
         console.log(`${theme.name}: ${uiKeys.length} UI colors, ${Object.keys(theme.style.syntax).length} syntax styles`);
     }
     console.log(`Wrote ${path.relative(ROOT, ZED_DIR)}/ (extension v${pkg.version})`);
+
+    syncExtensionsRepo(pkg);
 }
 
 main();
