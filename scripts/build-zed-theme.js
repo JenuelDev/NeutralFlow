@@ -268,6 +268,10 @@ function buildStyle(theme) {
 
     const frameBg = pick('editorGroupHeader.tabsBackground', 'statusBar.background') || editorBg;
     const panelBg = pick('sideBar.background') || editorBg;
+    // Zed draws the agent panel's message input and sent messages on the editor
+    // background inside the panel background, so a panel that matches the
+    // editor hides the input. Drop it to the frame color in that case.
+    const zedPanelBg = panelBg === editorBg ? frameBg : panelBg;
     const border = pick('editorGroup.border', 'panel.border', 'sideBar.border') || frameBg;
     const focusBorder = pick('focusBorder') || border;
 
@@ -284,7 +288,7 @@ function buildStyle(theme) {
     // VS Code has no "muted text" color, so dim the main text, but only as far
     // as it stays readable on every surface Zed draws secondary labels on.
     const text = pick('foreground', 'sideBar.foreground') || editorFg;
-    const surfaces = [editorBg, panelBg, elevatedBg, statusBarBg, titleBarBg, tabBarBg, inactiveTabBg, activeTabBg, hover, selected];
+    const surfaces = [editorBg, panelBg, zedPanelBg, elevatedBg, statusBarBg, titleBarBg, tabBarBg, inactiveTabBg, activeTabBg, hover, selected];
     const textMuted = dimText(text, editorBg, 0.3, surfaces);
     const textPlaceholder = pick('input.placeholderForeground') || mix(text, editorBg, 0.5);
     const textDisabled = pick('disabledForeground') || mix(text, editorBg, 0.6);
@@ -374,7 +378,7 @@ function buildStyle(theme) {
         'tab.active_background': activeTabBg,
         'search.match_background': matchBg,
         'search.active_match_background': activeMatchBg,
-        'panel.background': panelBg,
+        'panel.background': zedPanelBg,
         'panel.focused_border': focusBorder,
         'panel.indent_guide': pick('tree.indentGuidesStroke', 'editorIndentGuide.background1', 'editorIndentGuide.background'),
         'panel.indent_guide_hover': pick('editorIndentGuide.activeBackground1', 'editorIndentGuide.activeBackground'),
