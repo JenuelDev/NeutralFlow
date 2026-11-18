@@ -92,6 +92,8 @@ const SYNTAX_MAP = {
 
 const ANSI_COLORS = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
 const TRANSPARENT = '#00000000';
+// Lowest contrast a Zed border needs against the editor to read as a line.
+const MIN_BORDER_CONTRAST = 1.3;
 
 // --- Colors -----------------------------------------------------------------
 
@@ -144,6 +146,15 @@ function dimText(text, to, maxT, backgrounds) {
         if (backgrounds.every((bg) => contrast(color, bg) >= 4.5)) return color;
     }
     return text;
+}
+
+// Blends `from` toward `to` just far enough to reach `min` contrast with `from`.
+function standOut(from, to, min) {
+    for (let t = 0.01; t < 1; t += 0.01) {
+        const color = mix(from, to, t);
+        if (contrast(color, from) >= min) return color;
+    }
+    return normalize(to);
 }
 
 // --- TextMate scope resolution -----------------------------------------------
@@ -268,12 +279,8 @@ function buildStyle(theme) {
 
     const frameBg = pick('editorGroupHeader.tabsBackground', 'statusBar.background') || editorBg;
     const panelBg = pick('sideBar.background') || editorBg;
-    // Zed draws the agent panel's message input and sent messages on the editor
-    // background inside the panel background, so a panel that matches the
-    // editor hides the input. Drop it to the frame color in that case.
-    const zedPanelBg = panelBg === editorBg ? frameBg : panelBg;
-    const border = pick('editorGroup.border', 'panel.border', 'sideBar.border') || frameBg;
-    const focusBorder = pick('focusBorder') || border;
+    const themeBorder = pick('editorGroup.border', 'panel.border', 'sideBar.border') || frameBg;
+    const focusBorder = pick('focusBorder') || themeBorder;
 
     const elevatedBg = pick('editorHoverWidget.background', 'editorWidget.background') || panelBg;
     const statusBarBg = pick('statusBar.background') || frameBg;
@@ -285,10 +292,21 @@ function buildStyle(theme) {
     const selected = pick('list.activeSelectionBackground', 'list.hoverBackground') || hover;
     const selection = pick('editor.selectionBackground') || selected;
 
+    // Zed draws the agent panel's message input and sent messages on the editor
+    // background inside the panel, outlined only by `border`. When the panel
+    // matches the editor and the theme's border barely shows against it, the
+    // input disappears, so borrow the first palette color that stands out.
+    const border =
+        panelBg === editorBg && contrast(themeBorder, editorBg) < MIN_BORDER_CONTRAST
+            ? [pick('editorWidget.border', 'editorHoverWidget.border'), selected, hover].find(
+                  (color) => color && contrast(color, editorBg) >= MIN_BORDER_CONTRAST,
+              ) || standOut(editorBg, editorFg, MIN_BORDER_CONTRAST)
+            : themeBorder;
+
     // VS Code has no "muted text" color, so dim the main text, but only as far
     // as it stays readable on every surface Zed draws secondary labels on.
     const text = pick('foreground', 'sideBar.foreground') || editorFg;
-    const surfaces = [editorBg, panelBg, zedPanelBg, elevatedBg, statusBarBg, titleBarBg, tabBarBg, inactiveTabBg, activeTabBg, hover, selected];
+    const surfaces = [editorBg, panelBg, elevatedBg, statusBarBg, titleBarBg, tabBarBg, inactiveTabBg, activeTabBg, hover, selected];
     const textMuted = dimText(text, editorBg, 0.3, surfaces);
     const textPlaceholder = pick('input.placeholderForeground') || mix(text, editorBg, 0.5);
     const textDisabled = pick('disabledForeground') || mix(text, editorBg, 0.6);
@@ -378,7 +396,7 @@ function buildStyle(theme) {
         'tab.active_background': activeTabBg,
         'search.match_background': matchBg,
         'search.active_match_background': activeMatchBg,
-        'panel.background': zedPanelBg,
+        'panel.background': panelBg,
         'panel.focused_border': focusBorder,
         'panel.indent_guide': pick('tree.indentGuidesStroke', 'editorIndentGuide.background1', 'editorIndentGuide.background'),
         'panel.indent_guide_hover': pick('editorIndentGuide.activeBackground1', 'editorIndentGuide.activeBackground'),
